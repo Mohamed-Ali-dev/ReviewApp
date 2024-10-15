@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using ReviewApp.Data;
 using ReviewApp;
+using ReviewApp.Repository.IRepository;
+using ReviewApp.Repository;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
