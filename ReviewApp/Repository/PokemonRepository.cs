@@ -12,9 +12,23 @@ namespace ReviewApp.Repository
             _db = db;
         }
 
+        public decimal GetPokemonRating(int pokeId)
+        {
+            var review = _db.Reviews.Where(p => p.Pokemon.Id == pokeId);
+            if (review.Count() <= 0)
+                return 0;
+
+            return ((decimal)review.Sum(r => r.Rating) / review.Count());
+        }
+
+        public bool PokemonExist(int pokeId)
+        {
+           return _db.Pokemons.Any(p => p.Id == pokeId);
+        }
+
         public void Update(Pokemon pokemon)
         {
-            throw new NotImplementedException();
+            _db.Update(pokemon);
         }
     }
 }
