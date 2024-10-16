@@ -1,5 +1,6 @@
 ﻿using ReviewApp.Data;
 using ReviewApp.Repository.IRepository;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ReviewApp.Repository
 {
@@ -9,6 +10,7 @@ namespace ReviewApp.Repository
         public ICategoryRepository Category { get; private set; }
         public ICountryRepository Country { get; private set; }
         public IOwnerRepository Owner { get; private set; }
+        public IReviewRepository Review { get; private set; }
 
         private readonly ApplicationDbContext _db;
         public UnitOfWork(ApplicationDbContext db)
@@ -19,6 +21,8 @@ namespace ReviewApp.Repository
             Category = new CategoryRepository(_db);
             Country = new CountryRepository(_db);
             Owner = new OwnerRepository(_db);
+            Review = new ReviewRepository(_db);
+            
         }
         public void Save()
         {

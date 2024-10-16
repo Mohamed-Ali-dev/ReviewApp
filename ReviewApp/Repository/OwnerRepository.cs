@@ -14,12 +14,14 @@ namespace ReviewApp.Repository
 
         public ICollection<Owner> GetOwnerOfAPokemon(int pokeId)
         {
-            throw new NotImplementedException();
+            return _db.PokemonOwners.Where(u => u.PokemonId == pokeId)
+                .Select(o => o.Owner).ToList();
         }
 
         public ICollection<Pokemon> GetPokemonByOwner(int ownerId)
         {
-            throw new NotImplementedException();
+            return _db.PokemonOwners.Where(u => u.OwnerId == ownerId)
+                .Select(p => p.Pokemon).ToList();
         }
 
         public void Update(Owner obj)

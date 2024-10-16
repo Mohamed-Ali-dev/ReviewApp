@@ -6,6 +6,7 @@
         ICategoryRepository Category { get; }
         ICountryRepository Country { get; }
         IOwnerRepository Owner { get; }
+        IReviewRepository Review { get; }
         void Save();
     }
 }

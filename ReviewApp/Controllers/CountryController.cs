@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReviewApp.Dtos;
 using ReviewApp.Models;
 using ReviewApp.Repository.IRepository;
+using System.Diagnostics.Metrics;
 
 namespace ReviewApp.Controllers
 {
@@ -68,8 +69,15 @@ namespace ReviewApp.Controllers
         [HttpGet("/owners/{countryId}")]
         public IActionResult GetOwnersFromCountry(int countryId)
         {
-            ICollection<Owner> owmers = _unitOfWork.Country.GetOwnersFromCountry(countryId);
-            return Ok(owmers);
+          var owmers = _mapper.Map<List<OwnerDto>>(_unitOfWork.Country.GetOwnersFromCountry(countryId));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                return Ok(owmers);
+            }
 
         }
 

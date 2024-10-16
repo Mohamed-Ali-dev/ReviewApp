@@ -9,55 +9,58 @@ namespace ReviewApp.Controllers
     [Route("api/[Controller]")]
     [ApiController]
 
-    public class CategoryController : ControllerBase
+    public class OwnerController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CategoryController(IUnitOfWork unitOfWork, IMapper mapper)
+        public OwnerController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Category>))]
-        public IActionResult GetCategories()
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]
+        public IActionResult GetOwners()
         {
             
-            var categories = _mapper.Map<List<CategoryDto>>(_unitOfWork.Category.GetAll());
+            var owners = _mapper.Map<List<OwnerDto>>(_unitOfWork.Owner.GetAll());
             if (ModelState.IsValid)
             {
-                return Ok(categories);
+                return Ok(owners);
             }
             else
             {
                 return BadRequest(ModelState);
             }
         }
-        [HttpGet("{categoryId}")]
-        [ProducesResponseType(200, Type = typeof(Category))]
+        [HttpGet("{OwnerId}")]
+        [ProducesResponseType(200, Type = typeof(Owner))]
         [ProducesResponseType(400)]
-        public IActionResult GetCategory(int categoryId)
+        public IActionResult GetOwner(int OwnerId)
         {
-            if (!_unitOfWork.Category.ObjectExist(u => u.Id == categoryId))
+            if (!_unitOfWork.Owner.ObjectExist(u => u.Id == OwnerId))
                 return NotFound();
 
-            var category = _mapper.Map<CategoryDto>(_unitOfWork.Category.Get(u => u.Id == categoryId));
+            var Owner = _mapper.Map<OwnerDto>(_unitOfWork.Owner.Get(u => u.Id == OwnerId));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             else
             {
-                return Ok(category);
+                return Ok(Owner);
             }
         }
-        [HttpGet("pokemon/{categoryId}")]
+        [HttpGet("pokemon/{ownerId}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
         [ProducesResponseType(400)]
-        public IActionResult GetPokemonByCategoryId(int categoryId)
+        public IActionResult GetPokemonByOwner(int ownerId)
         {
-            var pokemons = _mapper.Map<List<PokemonDto>>(_unitOfWork.Category
-                .GetPokemonByCategory(categoryId));
+            if (!_unitOfWork.Owner.ObjectExist(u => u.Id == ownerId))
+                return NotFound();
+
+            var pokemons = _mapper.Map<List<PokemonDto>>(_unitOfWork.Owner
+                .GetPokemonByOwner(ownerId));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -66,6 +69,25 @@ namespace ReviewApp.Controllers
             {
                 return Ok(pokemons);
             }
+        }
+        [HttpGet("owners/{pokeId}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
+        [ProducesResponseType(400)]
+        public IActionResult GetOwnerOfAPokemon(int pokeId)
+        {
+            if (!_unitOfWork.Pokemon.ObjectExist(u => u.Id == pokeId))
+                return NotFound();
+
+            var owners =_mapper.Map<List<OwnerDto>>(_unitOfWork.Owner.GetOwnerOfAPokemon(pokeId));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                return Ok(owners);
+            }
+
         }
     }
 }
