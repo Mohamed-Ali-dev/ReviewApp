@@ -44,6 +44,7 @@ namespace ReviewApp.Repository
                 query = dbset.AsNoTracking();
             }
             query = query.Where(filter);
+
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach(var includeprop in includeProperties.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))

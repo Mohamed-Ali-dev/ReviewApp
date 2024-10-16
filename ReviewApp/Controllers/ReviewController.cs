@@ -53,7 +53,7 @@ namespace ReviewApp.Controllers
         }
    
         [HttpGet("Reviews/{pokeId}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Review>))]
         [ProducesResponseType(400)]
         public IActionResult GetReviewsOfAPokemon(int pokeId)
         {

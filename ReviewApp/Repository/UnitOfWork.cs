@@ -11,6 +11,7 @@ namespace ReviewApp.Repository
         public ICountryRepository Country { get; private set; }
         public IOwnerRepository Owner { get; private set; }
         public IReviewRepository Review { get; private set; }
+        public IReviewerRepository Reviewer { get; private set; }
 
         private readonly ApplicationDbContext _db;
         public UnitOfWork(ApplicationDbContext db)
@@ -22,6 +23,7 @@ namespace ReviewApp.Repository
             Country = new CountryRepository(_db);
             Owner = new OwnerRepository(_db);
             Review = new ReviewRepository(_db);
+            Reviewer = new ReviewerRepository(_db);
             
         }
         public void Save()

@@ -16,12 +16,6 @@ namespace ReviewApp.Repository
         {
             return _db.Owners.Where(e => e.Id == ownerId).Select(c => c.Country).FirstOrDefault();
         }
-
-        public ICollection<Owner> GetOwnersFromCountry(int countryId)
-        {
-            return _db.Owners.Where(c => c.Country.Id == countryId).ToList(); 
-        }
-
         public void Update(Country obj)
         {
             _db.Update(obj);

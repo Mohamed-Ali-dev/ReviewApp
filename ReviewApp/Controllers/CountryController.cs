@@ -69,7 +69,7 @@ namespace ReviewApp.Controllers
         [HttpGet("/owners/{countryId}")]
         public IActionResult GetOwnersFromCountry(int countryId)
         {
-          var owmers = _mapper.Map<List<OwnerDto>>(_unitOfWork.Country.GetOwnersFromCountry(countryId));
+          var owmers = _mapper.Map<List<OwnerDto>>(_unitOfWork.Owner.GetAll(u => u.CountryId == countryId));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
