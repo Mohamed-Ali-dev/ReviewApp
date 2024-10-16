@@ -5,6 +5,7 @@
         IPokemonRepository Pokemon { get; }
         ICategoryRepository Category { get; }
         ICountryRepository Country { get; }
+        IOwnerRepository Owner { get; }
         void Save();
     }
 }

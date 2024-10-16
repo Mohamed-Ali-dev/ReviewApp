@@ -56,9 +56,6 @@ namespace ReviewApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetPokemonByCategoryId(int categoryId)
         {
-            if (!_unitOfWork.Category.ObjectExist(u => u.Id == categoryId))
-                return NotFound();
-
             var pokemons = _mapper.Map<List<PokemonDto>>(_unitOfWork.Category
                 .GetPokemonByCategory(categoryId));
             if (!ModelState.IsValid)
