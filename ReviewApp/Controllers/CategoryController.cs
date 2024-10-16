@@ -38,7 +38,7 @@ namespace ReviewApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetCategory(int categoryId)
         {
-            if (!_unitOfWork.Category.CategoryExist(categoryId))
+            if (!_unitOfWork.Category.ObjectExist(u => u.Id == categoryId))
                 return NotFound();
 
             var category = _mapper.Map<CategoryDto>(_unitOfWork.Category.Get(u => u.Id == categoryId));

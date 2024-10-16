@@ -55,5 +55,9 @@ namespace ReviewApp.Repository
 
         }
 
+        public bool ObjectExist(Expression<Func<T, bool>> filter)
+        {
+            return dbset.Any(filter);
+        }
     }
 }

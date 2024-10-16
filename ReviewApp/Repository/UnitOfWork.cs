@@ -7,6 +7,7 @@ namespace ReviewApp.Repository
     {
         public IPokemonRepository Pokemon { get; private set; }
         public ICategoryRepository Category { get; private set; }
+        public ICountryRepository Country { get; private set; }
 
         private readonly ApplicationDbContext _db;
         public UnitOfWork(ApplicationDbContext db)
@@ -15,6 +16,7 @@ namespace ReviewApp.Repository
 
             Pokemon = new PokemonRepository(_db);
             Category = new CategoryRepository(_db);
+            Country = new CountryRepository(_db);
         }
         public void Save()
         {

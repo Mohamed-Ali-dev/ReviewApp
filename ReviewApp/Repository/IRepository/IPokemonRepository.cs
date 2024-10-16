@@ -7,6 +7,5 @@ namespace ReviewApp.Repository.IRepository
     {
         void Update(Pokemon pokemon);
         decimal GetPokemonRating(int pokeId); 
-        bool PokemonExist(int pokeId);
     }
 }

@@ -12,11 +12,6 @@ namespace ReviewApp.Repository
             _db = db;
         }
 
-        public bool CategoryExist(int categoryId)
-        {
-            return _db.Categories.Any(c => c.Id == categoryId);
-        }
-
         public IEnumerable<Pokemon> GetPokemonByCategory(int categoryId)
         {
             return _db.PokemonCategories.Where(e => e.CategoryId == categoryId)

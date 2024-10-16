@@ -21,11 +21,6 @@ namespace ReviewApp.Repository
             return ((decimal)review.Sum(r => r.Rating) / review.Count());
         }
 
-        public bool PokemonExist(int pokeId)
-        {
-           return _db.Pokemons.Any(p => p.Id == pokeId);
-        }
-
         public void Update(Pokemon pokemon)
         {
             _db.Update(pokemon);

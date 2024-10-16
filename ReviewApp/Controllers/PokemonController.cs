@@ -37,7 +37,7 @@ namespace ReviewApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetPokemon(int pokeId)
         {
-            if(!_unitOfWork.Pokemon.PokemonExist(pokeId))
+            if(!_unitOfWork.Pokemon.ObjectExist(u => u.Id ==pokeId))
                 return NotFound();
 
             var pokemon = _mapper.Map<PokemonDto>(_unitOfWork.Pokemon.Get(u => u.Id == pokeId));
@@ -55,7 +55,7 @@ namespace ReviewApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetPokemonRating(int pokeId)
         {
-            if (!_unitOfWork.Pokemon.PokemonExist(pokeId))
+            if (!_unitOfWork.Pokemon.ObjectExist(u => u.Id == pokeId))
                 return NotFound();
 
             var rating = _unitOfWork.Pokemon.GetPokemonRating(pokeId);
