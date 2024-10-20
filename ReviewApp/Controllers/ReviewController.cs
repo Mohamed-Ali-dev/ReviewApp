@@ -88,5 +88,28 @@ namespace ReviewApp.Controllers
 
             return Ok("Successfully created");
         }
+        [HttpPut]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult Update([FromBody] ReviewDto reviewDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (reviewDto.Id == 0)
+            {
+                return BadRequest("Enter the review Id");
+            }
+            var reviewFromDb = _unitOfWork.Review.Get(c => c.Id == reviewDto.Id);
+            if (reviewFromDb == null)
+            {
+                return NotFound("Review not found");
+            }
+            var review = _mapper.Map<Review>(reviewDto);
+            _unitOfWork.Review.Update(review);
+            _unitOfWork.Save();
+            return Ok(review);
+        }
     }
 }

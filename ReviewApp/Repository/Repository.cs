@@ -65,5 +65,15 @@ namespace ReviewApp.Repository
         {
             _db.Add(entity);
         }
+
+        public void Delete(T entity)
+        {
+           _db.Remove(entity);
+        }
+
+        public void DeleteRange(IEnumerable<T> entities)
+        {
+            _db.RemoveRange(entities);
+        }
     }
 }

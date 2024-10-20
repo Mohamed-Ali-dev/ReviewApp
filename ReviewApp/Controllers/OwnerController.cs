@@ -96,7 +96,7 @@ namespace ReviewApp.Controllers
                 return BadRequest(ModelState);
 
             var ownerFromDb = _unitOfWork.Owner.Get(U => U.LastName.Trim().ToUpper()
-            == ownerDto.LastName.TrimEnd().ToUpper() && U.FirstName.Trim().ToUpper() == U.FirstName.Trim().ToUpper());
+            == ownerDto.LastName.TrimEnd().ToUpper() && U.FirstName.Trim().ToUpper() == ownerDto.FirstName.Trim().ToUpper());
 
             if (ownerFromDb != null)
             {
@@ -114,6 +114,37 @@ namespace ReviewApp.Controllers
             _unitOfWork.Save();
 
             return Ok("Successfully created");
+        }
+        [HttpPut]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult Update([FromBody] OwnerDto ownerDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (ownerDto.Id == 0)
+            {
+                return BadRequest("Enter the owner Id");
+            }
+            var ownerFromDb = _unitOfWork.Owner.Get(c => c.Id == ownerDto.Id);
+            if (ownerFromDb == null)
+            {
+                return NotFound("Owner Not found");
+            }
+            var ownerFromdatabase = _unitOfWork.Owner.Get(U => U.LastName.Trim().ToUpper()
+           == ownerDto.LastName.TrimEnd().ToUpper() && U.FirstName.Trim().ToUpper() == ownerDto.FirstName.Trim().ToUpper());
+
+            if (ownerFromdatabase != null)
+            {
+                ModelState.AddModelError("", "Owner already exist");
+                return StatusCode(422, ModelState);
+            }
+            var owner = _mapper.Map<Owner>(ownerDto);
+            _unitOfWork.Owner.Update(owner);
+            _unitOfWork.Save();
+            return Ok(owner);
         }
     }
 }

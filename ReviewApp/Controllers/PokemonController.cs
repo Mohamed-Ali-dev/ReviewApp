@@ -84,6 +84,7 @@ namespace ReviewApp.Controllers
             }
             var pokemon = new Pokemon
             {
+                Id = pokemonDto.Id,
                 Name = pokemonDto.Name,
                 BirthDate = pokemonDto.BirthDate,
             };
@@ -121,6 +122,76 @@ namespace ReviewApp.Controllers
 
         }
 
+        [HttpPut]
+        public IActionResult UpdatePokemon([FromBody] CreatePokemonDto pokemonDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var pokemonFromdb = _unitOfWork.Pokemon.Get(p => p.Id == pokemonDto.Id,tracked:true);
+            if (pokemonFromdb == null)
+            {
+                return NotFound("Pokemon not found");
+            }
+            var pokemonFromDb = _unitOfWork.Pokemon.Get(p => p.Name == pokemonDto.Name);
+            if (pokemonFromDb != null)
+            {
+                ModelState.AddModelError("", "Pokemon already exist");
+                return StatusCode(422, ModelState);
+            }
+      
+            pokemonFromdb.Name =  pokemonDto.Name;
+            pokemonFromdb.BirthDate = pokemonDto.BirthDate;
+
+            if (pokemonDto.OwnerIds != null)
+            {
+                //clear exiting owners
+                var existingPokemonOwners = _unitOfWork.PokemonOwner
+                    .GetAll(po => po.PokemonId == pokemonFromdb.Id);
+                foreach (var po in existingPokemonOwners)
+                {
+                    _unitOfWork.PokemonOwner.Delete(po);
+                }
+                foreach (var ownerID in pokemonDto.OwnerIds)
+                {
+                    var ownerFromDb = _unitOfWork.Owner.Get(o => o.Id == ownerID, tracked: true);
+                    if (ownerFromDb != null)
+                    {
+                        _unitOfWork.PokemonOwner.Create(new PokemonOwner
+                        {
+                            Owner = ownerFromDb,
+                            Pokemon = pokemonFromdb
+                        });
+                    }
+                }
+            }
+            if(pokemonDto.CategoryIds != null )
+            {
+                // Clear existing categories
+                var existingPokemonCategories = _unitOfWork.PokemonCategory.GetAll(pc => pc.PokemonId == pokemonFromdb.Id);
+                foreach (var pc in existingPokemonCategories)
+                {
+                    _unitOfWork.PokemonCategory.Delete(pc);
+                }
+
+                foreach (var categoryId in pokemonDto.CategoryIds)
+                {
+                    var categoryFromDb = _unitOfWork.Category.Get(c => c.Id == categoryId, tracked: true);
+                    if (categoryFromDb != null)
+                    {
+                        _unitOfWork.PokemonCategory.Create(new PokemonCategory
+                        {
+                            Category = categoryFromDb,
+                            Pokemon = pokemonFromdb
+                        });
+                    }
+                }
+            }
+            _unitOfWork.Save();
+            return Ok(new { message = "Pokemon updated successfully!" });
+
+        }
 
 
     }

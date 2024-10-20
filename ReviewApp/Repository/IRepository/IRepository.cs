@@ -8,6 +8,8 @@ namespace ReviewApp.Repository.IRepository
         T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false);
         public bool ObjectExist(Expression<Func<T, bool>> filter);
         void Create(T entity);
+        void Delete(T entity);
+        void DeleteRange(IEnumerable<T> entities);
 
 
     }

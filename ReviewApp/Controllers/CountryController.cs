@@ -105,5 +105,28 @@ namespace ReviewApp.Controllers
 
             return Ok("Successfully created");
         }
+        [HttpPut]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult Update([FromBody] CountryDto countryDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (countryDto.Id == 0)
+            {
+                return BadRequest("Enter the country Id");
+            }
+            var countryFromDb = _unitOfWork.Category.Get(c => c.Id == countryDto.Id);
+            if (countryFromDb == null)
+            {
+                return NotFound("there is no country with this id");
+            }
+            var country = _mapper.Map<Country>(countryDto);
+            _unitOfWork.Country.Update(country);
+            _unitOfWork.Save();
+            return Ok(country);
+        }
     }
 }

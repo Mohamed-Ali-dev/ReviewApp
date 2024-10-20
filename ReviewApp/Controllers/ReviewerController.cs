@@ -79,9 +79,9 @@ namespace ReviewApp.Controllers
 
             var reviewerFromDb = _unitOfWork.Reviewer.Get(U => U.LastName.Trim().ToUpper()
                   == reviewerDto.LastName.TrimEnd().ToUpper() 
-                  && U.FirstName.Trim().ToUpper() == U.FirstName.Trim().ToUpper());
+                  && U.FirstName.Trim().ToUpper() == reviewerDto.FirstName.Trim().ToUpper());
 
-            if (reviewerDto != null)
+            if (reviewerFromDb != null)
             {
                 ModelState.AddModelError("", "Reviewer already exist");
                 return StatusCode(422, ModelState);
@@ -97,6 +97,29 @@ namespace ReviewApp.Controllers
             _unitOfWork.Save();
 
             return Ok("Successfully created");
+        }
+        [HttpPut]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult Update([FromBody] ReviewerDto reviewerDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (reviewerDto.Id == 0)
+            {
+                return BadRequest("Enter the reviewer Id");
+            }
+            var reviewerFromDb = _unitOfWork.Reviewer.Get(c => c.Id == reviewerDto.Id);
+            if (reviewerFromDb == null)
+            {
+                return NotFound("Reviewer not found");
+            }
+            var reviewer = _mapper.Map<Reviewer>(reviewerDto);
+            _unitOfWork.Reviewer.Update(reviewer);
+            _unitOfWork.Save();
+            return Ok(reviewer);
         }
     }
 }

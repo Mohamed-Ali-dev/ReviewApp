@@ -95,6 +95,27 @@ namespace ReviewApp.Controllers
 
             return Ok("Successfully created");
         }
-
+        [HttpPut]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult Update([FromBody] CategoryDto categoryDto)
+        {
+            if(!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            if(categoryDto.Id == 0)
+            {
+                return BadRequest("Enter the category Id");
+            }
+            var categoryFromDb = _unitOfWork.Category.Get(c => c.Id == categoryDto.Id);
+            if (categoryFromDb == null)
+            {
+                return NotFound("there is no category with this id");
+            }
+            var category = _mapper.Map<Category>(categoryDto);
+            _unitOfWork.Category.Update(category);
+            _unitOfWork.Save();
+            return Ok(category);
+        }
     }
 }
