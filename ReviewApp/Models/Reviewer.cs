@@ -1,4 +1,6 @@
-﻿namespace ReviewApp.Models
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace ReviewApp.Models
 {
     public class Reviewer
     {

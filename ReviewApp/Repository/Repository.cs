@@ -60,5 +60,10 @@ namespace ReviewApp.Repository
         {
             return dbset.Any(filter);
         }
+
+        public void Create(T entity)
+        {
+            _db.Add(entity);
+        }
     }
 }

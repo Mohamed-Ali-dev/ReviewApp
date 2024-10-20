@@ -71,5 +71,32 @@ namespace ReviewApp.Controllers
             }
 
         }
+        [HttpPost]
+        public IActionResult CreateReviewer([FromBody] ReviewerDto reviewerDto)
+        {
+            if (reviewerDto == null)
+                return BadRequest(ModelState);
+
+            var reviewerFromDb = _unitOfWork.Reviewer.Get(U => U.LastName.Trim().ToUpper()
+                  == reviewerDto.LastName.TrimEnd().ToUpper() 
+                  && U.FirstName.Trim().ToUpper() == U.FirstName.Trim().ToUpper());
+
+            if (reviewerDto != null)
+            {
+                ModelState.AddModelError("", "Reviewer already exist");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var reviewer = _mapper.Map<Reviewer>(reviewerDto);
+            _unitOfWork.Reviewer.Create(reviewer);
+            _unitOfWork.Save();
+
+            return Ok("Successfully created");
+        }
     }
 }

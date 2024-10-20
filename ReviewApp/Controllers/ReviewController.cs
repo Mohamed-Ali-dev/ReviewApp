@@ -71,5 +71,22 @@ namespace ReviewApp.Controllers
             }
 
         }
+        [HttpPost]
+        public IActionResult CreateReview([FromBody]ReviewDto reviewDto)
+        {
+            if (reviewDto == null)
+                return BadRequest(ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var review = _mapper.Map<Review>(reviewDto);
+            _unitOfWork.Review.Create(review);
+            _unitOfWork.Save();
+
+            return Ok("Successfully created");
+        }
     }
 }

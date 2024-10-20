@@ -89,5 +89,31 @@ namespace ReviewApp.Controllers
             }
 
         }
+        [HttpPost]
+        public IActionResult CreateOwner([FromBody] OwnerDto ownerDto)
+        {
+            if (ownerDto == null)
+                return BadRequest(ModelState);
+
+            var ownerFromDb = _unitOfWork.Owner.Get(U => U.LastName.Trim().ToUpper()
+            == ownerDto.LastName.TrimEnd().ToUpper() && U.FirstName.Trim().ToUpper() == U.FirstName.Trim().ToUpper());
+
+            if (ownerFromDb != null)
+            {
+                ModelState.AddModelError("", "Owner already exist");
+                return StatusCode(422, ModelState);
+            }
+            
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var owner = _mapper.Map<Owner>(ownerDto);
+            _unitOfWork.Owner.Create(owner);
+            _unitOfWork.Save();
+
+            return Ok("Successfully created");
+        }
     }
 }

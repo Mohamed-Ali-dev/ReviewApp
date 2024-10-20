@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReviewApp.Dtos;
 using ReviewApp.Models;
 using ReviewApp.Repository.IRepository;
@@ -68,7 +69,57 @@ namespace ReviewApp.Controllers
                 return Ok(rating);
             }
         }
+        [HttpPost]
+        public IActionResult CreatePokemon([FromBody] CreatePokemonDto pokemonDto)
+        {
+            var pokemonFromDb = _unitOfWork.Pokemon.Get(p => p.Name == pokemonDto.Name);
+            if (pokemonFromDb != null)
+            {
+                ModelState.AddModelError("", "Pokemon already exist");
+                return StatusCode(422, ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var pokemon = new Pokemon
+            {
+                Name = pokemonDto.Name,
+                BirthDate = pokemonDto.BirthDate,
+            };
+            _unitOfWork.Pokemon.Create(pokemon);
+            if(pokemonDto.OwnerIds !=null)
+            {
+                foreach (var ownerID in pokemonDto.OwnerIds)
+                {
+                    var OwnerFromDb = _unitOfWork.Owner.Get(o => o.Id == ownerID, tracked: true);
+                    if (OwnerFromDb != null)
+                    {
+                        _unitOfWork.PokemonOwner.Create(new PokemonOwner
+                        {
+                            Owner = OwnerFromDb,
+                            Pokemon = pokemon
+                        });
+                    }
+                }
+            }    
+         
+            foreach(var categoryId in pokemonDto.CategoryIds)
+            {
+                var categoryFromDb = _unitOfWork.Category.Get(c => c.Id == categoryId, tracked:true);
+                if(categoryFromDb != null)
+                {
+                    _unitOfWork.PokemonCategory.Create(new PokemonCategory
+                    {
+                        Category = categoryFromDb,
+                        Pokemon = pokemon
+                    });
+                }
+            }
+            _unitOfWork.Save();
+            return Ok(new { message = "Pokemon added successfully!" });
 
+        }
 
 
 

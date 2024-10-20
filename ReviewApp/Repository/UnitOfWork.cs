@@ -1,4 +1,5 @@
 ﻿using ReviewApp.Data;
+using ReviewApp.Models;
 using ReviewApp.Repository.IRepository;
 using System.Security.Cryptography.X509Certificates;
 
@@ -12,6 +13,8 @@ namespace ReviewApp.Repository
         public IOwnerRepository Owner { get; private set; }
         public IReviewRepository Review { get; private set; }
         public IReviewerRepository Reviewer { get; private set; }
+        public IPokemonCategoryRepository PokemonCategory { get; private set; }
+        public IPokemonOwnerRepository PokemonOwner { get; private set; }
 
         private readonly ApplicationDbContext _db;
         public UnitOfWork(ApplicationDbContext db)
@@ -24,6 +27,8 @@ namespace ReviewApp.Repository
             Owner = new OwnerRepository(_db);
             Review = new ReviewRepository(_db);
             Reviewer = new ReviewerRepository(_db);
+            PokemonCategory = new PokemonCategoryRepository(_db);
+            PokemonOwner = new PokemonOwnerRepository(_db);
             
         }
         public void Save()

@@ -80,6 +80,30 @@ namespace ReviewApp.Controllers
             }
 
         }
+        [HttpPost]
+        public IActionResult CreateCountry([FromBody] CountryDto countryDto)
+        {
+            if (countryDto == null)
+                return BadRequest(ModelState);
 
+            var countryFromdB = _unitOfWork.Country.Get(U => U.Name.Trim().ToUpper()
+            == countryDto.Name.TrimEnd().ToUpper());
+
+            if (countryFromdB != null)
+            {
+                ModelState.AddModelError("", "Country already exist");
+                return StatusCode(422, ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var country = _mapper.Map<Country>(countryDto);
+            _unitOfWork.Country.Create(country);
+            _unitOfWork.Save();
+
+            return Ok("Successfully created");
+        }
     }
 }
