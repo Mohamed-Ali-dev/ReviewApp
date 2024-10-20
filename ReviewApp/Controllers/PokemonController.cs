@@ -192,7 +192,42 @@ namespace ReviewApp.Controllers
             return Ok(new { message = "Pokemon updated successfully!" });
 
         }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult Delete(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest("id Cannot be zero");
+            }
+            if (!_unitOfWork.Pokemon.ObjectExist(c => c.Id == id))
+            {
+                return NotFound("Pokemon Not Found");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            //remove owners of that pokemon 
+            var pokemonOwners = _unitOfWork.PokemonOwner.GetAll(po => po.PokemonId == id);
+            if(pokemonOwners.Any())
+            {
+                _unitOfWork.PokemonOwner.DeleteRange(pokemonOwners);
+            }
+            //remove categories of that pokemon 
+            var pokemonCategoriess = _unitOfWork.PokemonCategory.GetAll(po => po.PokemonId == id);
+            if (pokemonCategoriess.Any())
+            {
+                _unitOfWork.PokemonCategory.DeleteRange(pokemonCategoriess);
+            }
+            var pokemonToBeDeleted = _unitOfWork.Pokemon.Get(c => c.Id == id);
+            _unitOfWork.Pokemon.Delete(pokemonToBeDeleted);
+            _unitOfWork.Save();
+            return NoContent();
 
+        }
 
     }
 }

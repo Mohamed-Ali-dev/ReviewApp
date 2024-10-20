@@ -146,5 +146,29 @@ namespace ReviewApp.Controllers
             _unitOfWork.Save();
             return Ok(owner);
         }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult Delete(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest("id Cannot be zero");
+            }
+            if (!_unitOfWork.Owner.ObjectExist(c => c.Id == id))
+            {
+                return NotFound("Owner Not Found");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var ownerToBeDeleted = _unitOfWork.Owner.Get(c => c.Id == id);
+            _unitOfWork.Owner.Delete(ownerToBeDeleted);
+            _unitOfWork.Save();
+            return NoContent();
+
+        }
     }
 }
