@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReviewApp.Dtos;
@@ -9,6 +10,8 @@ namespace ReviewApp.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
+    [Authorize]
+
 
     public class PokemonController : ControllerBase
     {

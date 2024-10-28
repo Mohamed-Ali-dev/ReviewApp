@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReviewApp.Dtos;
 using ReviewApp.Models;
@@ -8,6 +9,8 @@ namespace ReviewApp.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
+    [Authorize]
+
 
     public class ReviewerController : ControllerBase
     {
