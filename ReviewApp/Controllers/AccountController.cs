@@ -35,7 +35,7 @@ namespace ReviewApp.Controllers
 
             var result = await _authService.RegisterAsync(userDto);
 
-            if (!result.IsAuthenticated)
+            if (!result.IsAuthenticated)//flase
             return BadRequest(result.Message);
 
             return Ok(result);

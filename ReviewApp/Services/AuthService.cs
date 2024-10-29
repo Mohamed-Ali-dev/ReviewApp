@@ -25,10 +25,7 @@ namespace ReviewApp.Services
 
         public async Task<AuthModel> RegisterAsync(RegisterDto dto)
         {
-            if (await _userManager.FindByEmailAsync(dto.Email) is not null)
-                return new AuthModel { Message = "Email is already registered!" };
-
-            if (await _userManager.FindByEmailAsync(dto.UserName) is not null)
+            if (await _userManager.FindByEmailAsync(dto.Email) is not null || await _userManager.FindByEmailAsync(dto.UserName) is not null)
                 return new AuthModel { Message = "Email is already registered!" };
 
             var user = new ApplicationUser
