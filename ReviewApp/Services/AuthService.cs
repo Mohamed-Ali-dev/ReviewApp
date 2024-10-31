@@ -56,14 +56,20 @@ namespace ReviewApp.Services
             await _userManager.AddToRoleAsync(user, SD.Role_User);
             var jwtSecurityToken = await CreateJwtToken(user);
 
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshTokens?.Add(refreshToken);
+            await _userManager.UpdateAsync(user);
+
             return new AuthModel
             {
                 Email = user.Email,
-                //ExpiresOn = jwtSecurityToken.ValidTo,
+                ExpiresOn = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
                 Roles = new List<string> { SD.Role_User },
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Username = user.UserName,
+                RefreshToken = refreshToken.Token,
+                RefreshTokenExpiration = refreshToken.ExpiresOn
 
             };
 
@@ -87,7 +93,7 @@ namespace ReviewApp.Services
             authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             authModel.Email = user.Email;
             authModel.Username = user.UserName;
-            //authModel.ExpiresOn = jwtSecurityToken.ValidTo;
+            authModel.ExpiresOn = jwtSecurityToken.ValidTo;
             authModel.Roles = rolesList.ToList();
 
             if(user.RefreshTokens.Any(t => t.IsActive))
