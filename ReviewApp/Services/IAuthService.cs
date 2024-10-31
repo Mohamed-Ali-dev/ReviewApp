@@ -9,5 +9,7 @@ namespace ReviewApp.Services
         Task<AuthModel> RegisterAsync(RegisterDto dto);
         Task<AuthModel> GetTokenAsync(LogInDto dto);
         Task<string> AddRoleAsync(AddRoleDto dto);
+        Task<AuthModel> RefreshTokenAsync(string token);
+        Task<bool> RevokeTokenAsync(string token);
     }
 }
