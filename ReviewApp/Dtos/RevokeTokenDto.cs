@@ -1,6 +1,6 @@
 ﻿namespace ReviewApp.Dtos
 {
-    public class RevokeToken
+    public class RevokeTokenDto
     {
         public string? Token  { get; set; }
     }

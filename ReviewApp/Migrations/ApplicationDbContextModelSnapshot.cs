@@ -244,7 +244,7 @@ namespace ReviewApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -278,7 +278,7 @@ namespace ReviewApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
 
                     b.HasData(
                         new
@@ -325,7 +325,7 @@ namespace ReviewApp.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Owners");
+                    b.ToTable("Owners", (string)null);
 
                     b.HasData(
                         new
@@ -371,7 +371,7 @@ namespace ReviewApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pokemons");
+                    b.ToTable("Pokemons", (string)null);
 
                     b.HasData(
                         new
@@ -406,7 +406,7 @@ namespace ReviewApp.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("PokemonCategories");
+                    b.ToTable("PokemonCategories", (string)null);
 
                     b.HasData(
                         new
@@ -438,7 +438,7 @@ namespace ReviewApp.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("PokemonOwners");
+                    b.ToTable("PokemonOwners", (string)null);
 
                     b.HasData(
                         new
@@ -489,7 +489,7 @@ namespace ReviewApp.Migrations
 
                     b.HasIndex("ReviewerId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
 
                     b.HasData(
                         new
@@ -593,7 +593,7 @@ namespace ReviewApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reviewers");
+                    b.ToTable("Reviewers", (string)null);
 
                     b.HasData(
                         new
@@ -669,7 +669,7 @@ namespace ReviewApp.Migrations
 
             modelBuilder.Entity("ReviewApp.Models.ApplicationUser", b =>
                 {
-                    b.OwnsMany("ReviewApp.Models.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("ReviewApp.Models.ApplicationUser.RefreshTokens#ReviewApp.Models.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("ApplicationUserId")
                                 .HasColumnType("nvarchar(450)");
@@ -695,7 +695,7 @@ namespace ReviewApp.Migrations
 
                             b1.HasKey("ApplicationUserId", "Id");
 
-                            b1.ToTable("RefreshToken");
+                            b1.ToTable("RefreshToken", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");

@@ -84,7 +84,7 @@ namespace ReviewApp.Controllers
             return Ok(result);
         }
         [HttpPost("revokeToken")]
-        public async Task<IActionResult> RevokeToken(RevokeToken dto)
+        public async Task<IActionResult> RevokeToken(RevokeTokenDto dto)
         {
             var token = dto.Token ?? Request.Cookies["refreshToken"];
             if(string.IsNullOrEmpty(token))

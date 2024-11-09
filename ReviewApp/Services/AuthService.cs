@@ -7,8 +7,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Security.Cryptography;
-using Azure;
-using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace ReviewApp.Services
@@ -178,11 +176,11 @@ namespace ReviewApp.Services
             }
             //revoke the selected refresh token and create a new refresh token and jwt token
             refreshToken.RevokedOn = DateTime.UtcNow;
-
+            //create new refreshToken
             var newRefreshToken = GenerateRefreshToken();
             user.RefreshTokens.Add(newRefreshToken);
             await _userManager.UpdateAsync(user);
-            
+            //generate new tokenA
             var jwtToken = await CreateJwtToken(user);
             var roles = await _userManager.GetRolesAsync(user);
             authModel.IsAuthenticated = true;
